@@ -8,6 +8,9 @@ freeswitch_path: /usr/local/freeswitch/
 # freeswitch secret
 freeswitch_secret: ClueCon 
 
+# freeswitch repository
+freeswitch_repository: https://github.com/signalwire/freeswitch.git
+
 # freeswitch version
 freeswitch_version: v1.10.1
 
@@ -31,6 +34,9 @@ freeswitch_log_conf_template: ../templates/logfile.conf.xml
 
 # set to true if you want to build mod_google_tts, mod_google_transcribe, and mod_dialogflow
 build_with_grpc: false
+
+# set to true if you want a hairpin dialplan for recording purposes
+enable_hairpin: false
 
 grpc_version: v1.24.2
 

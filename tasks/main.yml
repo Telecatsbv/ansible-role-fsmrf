@@ -23,7 +23,7 @@
   shell: git config --global pull.rebase true
 
 - name: check out freeswitch code
-  git: repo=https://github.com/davehorton/freeswitch.git
+  git: repo={{freeswitch_repostory}}
        dest={{freeswitch_sources_path}}
        version={{freeswitch_version}}
        depth=50
@@ -139,6 +139,10 @@
 
 - name: Copy dialplan
   template: src=mrf_dialplan.xml.j2 dest={{freeswitch_path}}conf/dialplan/mrf.xml mode=0644
+  
+- name: Copy hairpin dialplan
+  template: src=mrf_dialplan.xml.j2 dest={{freeswitch_path}}conf/dialplan/mrf.xml mode=0644
+  when: enable_hairpin|bool
 
 - name: Copy ipv4 sip profile
   template: src=mrf_sip_profile.xml.j2 dest={{freeswitch_path}}conf/sip_profiles/mrf.xml mode=0644
