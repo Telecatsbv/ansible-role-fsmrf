@@ -23,7 +23,7 @@
   shell: git config --global pull.rebase true
 
 - name: check out freeswitch code
-  git: repo={{freeswitch_repostory}}
+  git: repo={{freeswitch_repository}}
        dest={{freeswitch_sources_path}}
        version={{freeswitch_version}}
        depth=50
