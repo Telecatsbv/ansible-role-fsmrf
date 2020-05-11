@@ -129,8 +129,7 @@
 @@ -165,8 +166,8 @@
  #xml_int/mod_xml_curl
  #xml_int/mod_xml_ldap
--xml_int/mod_xml_radius
-+#xml_int/mod_xml_radius
+ #xml_int/mod_xml_radius
 -xml_int/mod_xml_rpc
 -xml_int/mod_xml_scgi
 +#xml_int/mod_xml_rpc
