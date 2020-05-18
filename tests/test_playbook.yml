@@ -1,0 +1,10 @@
+---
+- hosts: test_host
+  remote_user: devops
+  become: yes
+  roles:
+    - ansible-role-fsmrf
+  vars:
+    remove_source: false
+    freeswitch_secret: ClueCon
+    enable_hairpin: true

@@ -138,10 +138,16 @@
   - dialplan/skinny-patterns
 
 - name: Copy dialplan
-  template: src=mrf_dialplan.xml.j2 dest={{freeswitch_path}}conf/dialplan/mrf.xml mode=0644
+  template: 
+    src: mrf_dialplan.xml.j2 
+    dest: "{{ freeswitch_path }}conf/dialplan/mrf.xml"
+    mode: 0644
   
 - name: Copy hairpin dialplan
-  template: src=mrf_dialplan.xml.j2 dest={{freeswitch_path}}conf/dialplan/mrf.xml mode=0644
+  template: 
+    src: hairpin_dialplan.xml.j2
+    dest: "{{ freeswitch_path }}conf/dialplan/hairpin.xml"
+    mode: 0644
   when: enable_hairpin|bool
 
 - name: Copy ipv4 sip profile
