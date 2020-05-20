@@ -107,7 +107,8 @@
 
 - name: FreeSwitch make
   shell: make chdir={{freeswitch_sources_path}}
-  creates: "{{ freeswitch_path }}bin/freeswitch"
+  args:
+    creates: "{{ freeswitch_path }}bin/freeswitch"
   register: freeswitch_make
 
 - name: FreeSwitch install
