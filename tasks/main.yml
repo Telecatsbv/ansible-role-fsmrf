@@ -107,12 +107,16 @@
 
 - name: FreeSwitch make
   shell: make chdir={{freeswitch_sources_path}}
+  creates: "{{ freeswitch_path }}bin/freeswitch"
+  register: freeswitch_make
 
 - name: FreeSwitch install
   shell: make install chdir={{freeswitch_sources_path}}
+  when: freeswitch_make|bool
 
 - name: make sounds
-  shell: cd {{freeswitch_sources_path}} && make cd-sounds-install cd-moh-install 
+  shell: cd {{freeswitch_sources_path}} && make cd-sounds-install cd-moh-install
+  when: freeswitch_make|bool
 
 - name: Copy acl.conf file
   template: src=acl.conf.xml.j2 dest={{freeswitch_path}}conf/autoload_configs/acl.conf.xml owner=root group=root mode=0644
