@@ -1,7 +1,8 @@
 ---
 
 - name: update apt-cache
-  apt: update_cache=yes 
+  apt:
+    update_cache: yes 
 
 - name:  install build dependencies
   apt: 
@@ -23,35 +24,39 @@
   shell: git config --global pull.rebase true
 
 - name: check out freeswitch code
-  git: repo={{freeswitch_repository}}
-       dest={{freeswitch_sources_path}}
-       version={{freeswitch_version}}
-       depth=50
-       accept_hostkey=yes
-       force=yes
+  git:
+    repo: "{{freeswitch_repository}}"
+    des: "{{freeswitch_sources_path}}"
+    version: "{{freeswitch_version}}"
+    depth: '50'
+    accept_hostkey: yes
+    force: yes
 
 - name: check out libfvad
-  git: repo=https://github.com/dpirch/libfvad.git
-       dest={{freeswitch_sources_path}}/libs/libfvad
-       depth=50
-       accept_hostkey=yes
-       force=yes
+  git:
+    repo: https://github.com/dpirch/libfvad.git
+    dest: "{{ freeswitch_sources_path }}/libs/libfvad"
+    depth: '50'
+    accept_hostkey: yes
+    force: yes
 
 - name: check out lws code
-  git: repo=https://github.com/warmcat/libwebsockets.git
-       dest={{freeswitch_sources_path}}/libs/libwebsockets
-       version=v3.2-stable
-       depth=50
-       accept_hostkey=yes
-       force=yes
+  git:
+    repo: https://github.com/warmcat/libwebsockets.git
+    dest: "{{freeswitch_sources_path}}/libs/libwebsockets"
+    version: v3.2-stable
+    depth: '50'
+    accept_hostkey: yes
+    force: yes
 
 - name: check out drachtio freeswitch modules
-  git: repo=https://github.com/davehorton/drachtio-freeswitch-modules.git
-       dest=/usr/local/src/drachtio-freeswitch-modules
-       version=master
-       depth=50
-       accept_hostkey=yes
-       force=yes
+  git:
+    repo: https://github.com/davehorton/drachtio-freeswitch-modules.git
+    dest: /usr/local/src/drachtio-freeswitch-modules
+    version: master
+    depth: '50'
+    accept_hostkey: yes
+    force: yes
 
 - name: copy mod_audio_fork into place
   shell: cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_audio_fork {{freeswitch_sources_path}}/src/mod/applications/mod_audio_fork
@@ -92,27 +97,30 @@
   shell: ./bootstrap.sh -j chdir={{freeswitch_sources_path}}
 
 - name: Freeswitch configuration (with grpc)
-  shell: ./{{freeswitch_configure_command}} --with-grpc=yes
+  shell: ./{{ freeswitch_configure_command }} --with-grpc=yes
   args:
-    chdir: "{{freeswitch_sources_path}}"
+    chdir: "{{ freeswitch_sources_path }}"
     warn: False
   when: build_with_grpc|bool
 
 - name: Freeswitch configuration (without grpc)
-  shell: ./{{freeswitch_configure_command}}
+  shell: ./{{ freeswitch_configure_command }}
   args:
-    chdir: "{{freeswitch_sources_path}}"
+    chdir: "{{ freeswitch_sources_path }}"
     warn: False
   when: not build_with_grpc|bool
 
 - name: FreeSwitch make
   shell: make chdir={{freeswitch_sources_path}}
   args:
-    creates: "{{ freeswitch_path }}bin/freeswitch"
+    creates: "{{ freeswitch_sources_path }}freeswitch"
   register: freeswitch_make
 
 - name: FreeSwitch install
-  shell: make install chdir={{freeswitch_sources_path}}
+  shell: make install
+  args:
+    chdir: "{{freeswitch_sources_path}}"
+    creates: "{{ freeswitch_path }}bin/freeswitch"
   when: freeswitch_make|bool
 
 - name: make sounds
@@ -120,13 +128,25 @@
   when: freeswitch_make|bool
 
 - name: Copy acl.conf file
-  template: src=acl.conf.xml.j2 dest={{freeswitch_path}}conf/autoload_configs/acl.conf.xml owner=root group=root mode=0644
+  template: 
+    src: acl.conf.xml.j2
+    dest: "{{ freeswitch_path }}conf/autoload_configs/acl.conf.xml"
+    owner: root
+    group: root
+    mode: '0644'
 
 - name: Copy event_socket.conf file
-  template: src=event_socket.conf.xml.j2 dest={{freeswitch_path}}conf/autoload_configs/event_socket.conf.xml owner=root group=root mode=0644
+  template:
+    src: event_socket.conf.xml.j2
+    dest: "{{ freeswitch_path }}conf/autoload_configs/event_socket.conf.xml"
+    owner: root
+    group: root
+    mode: '0644'
 
 - name: Remove unused dialplans and profiles
-  file: name={{freeswitch_path}}conf/{{ item }} state=absent
+  file:
+    name: "{{ freeswitch_path }}conf/{{ item }}"
+    state: absent
   with_items:
   - sip_profiles/external.xml
   - sip_profiles/external
@@ -146,20 +166,26 @@
   template: 
     src: mrf_dialplan.xml.j2 
     dest: "{{ freeswitch_path }}conf/dialplan/mrf.xml"
-    mode: 0644
+    mode: '0644'
   
 - name: Copy hairpin dialplan
   template: 
     src: hairpin_dialplan.xml.j2
     dest: "{{ freeswitch_path }}conf/dialplan/hairpin.xml"
-    mode: 0644
+    mode: '0644'
   when: enable_hairpin|bool
 
 - name: Copy ipv4 sip profile
-  template: src=mrf_sip_profile.xml.j2 dest={{freeswitch_path}}conf/sip_profiles/mrf.xml mode=0644
+  template:
+    src: mrf_sip_profile.xml.j2
+    dest: "{{ freeswitch_path }}conf/sip_profiles/mrf.xml"
+    mode: '0644'
 
 - name: Copy ipv6 sip profile
-  template: src=mrf_ipv6_sip_profile.xml.j2 dest={{freeswitch_path}}conf/sip_profiles/mrf_ipv6.xml mode=0644
+  template:
+    src: mrf_ipv6_sip_profile.xml.j2
+    dest: "{{ freeswitch_path }}conf/sip_profiles/mrf_ipv6.xml"
+    mode: '0644'
   when: 
     - hostvars[inventory_hostname]['ansible_default_ipv6']
     - hostvars[inventory_hostname]['ansible_default_ipv6']['address']
@@ -227,18 +253,27 @@
   shell: systemctl unmask freeswitch
 
 - name: install freeswitch.service
-  template: src=freeswitch.service.j2 dest=/etc/systemd/system/freeswitch.service
+  template:
+    src: freeswitch.service.j2
+    dest: /etc/systemd/system/freeswitch.service
 
 - name: reload systemctl
   shell: systemctl daemon-reload
 
 - name: enable freeswitch service
-  service: name=freeswitch state=restarted
+  service:
+    name: freeswitch 
+    state: restarted
 
 - name: log files management
-  template: src=freeswitch_log_rotation.j2 dest=/etc/cron.daily/freeswitch_log_rotation
+  template:
+    src: freeswitch_log_rotation.j2
+    dest: /etc/cron.daily/freeswitch_log_rotation
 
-- file: path=/etc/cron.daily/freeswitch_log_rotation mode="a+x"
+- name: set cron file mode
+  file:
+    path: /etc/cron.daily/freeswitch_log_rotation
+    mode: "a+x"
 
 - name: remove source code
   file: 
