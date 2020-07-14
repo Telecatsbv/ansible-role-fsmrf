@@ -26,7 +26,7 @@
 - name: check out freeswitch code
   git:
     repo: "{{freeswitch_repository}}"
-    des: "{{freeswitch_sources_path}}"
+    dest: "{{freeswitch_sources_path}}"
     version: "{{freeswitch_version}}"
     depth: '50'
     accept_hostkey: yes
