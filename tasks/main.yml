@@ -121,11 +121,11 @@
   args:
     chdir: "{{freeswitch_sources_path}}"
     creates: "{{ freeswitch_path }}bin/freeswitch"
-  when: freeswitch_make|bool
+  when: freeswitch_make.changed
 
 - name: make sounds
   shell: cd {{freeswitch_sources_path}} && make cd-sounds-install cd-moh-install
-  when: freeswitch_make|bool
+  when: freeswitch_make.changed
 
 - name: Copy acl.conf file
   template: 
