@@ -2,10 +2,10 @@
 
 - name: update apt-cache
   apt:
-    update_cache: yes 
+    update_cache: yes
 
 - name:  install build dependencies
-  apt: 
+  apt:
     state: latest
     name: ['curl', 'gnupg2', 'wget', 'git', 'cmake', 'automake', 'autoconf', 'libavformat-dev', 'liblua5.1-0-dev',
         'libtool', 'build-essential', 'pkg-config', 'ca-certificates', 'libssl-dev', 'lsb-release', 'systemd-coredump', 'liblz4-tool',
@@ -14,17 +14,17 @@
         'libopus-dev', 'libopusfile-dev', 'libsndfile-dev', 'libshout3-dev', 'libmpg123-dev', 'libmp3lame-dev']
 
 - name: install libtool-bin
-  apt: 
-    name: libtool-bin 
+  apt:
+    name: libtool-bin
     state: latest
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-  ignore_errors: yes          
+  ignore_errors: yes
 
 - name: git configure
   shell: git config --global pull.rebase true
 
 - name: remove source code
-  file: 
+  file:
     path: "{{ item }}"
     state: absent
   with_items:
@@ -174,13 +174,13 @@
   - dialplan/skinny-patterns
 
 - name: Copy dialplan
-  template: 
-    src: mrf_dialplan.xml.j2 
+  template:
+    src: mrf_dialplan.xml.j2
     dest: "{{ freeswitch_path }}conf/dialplan/mrf.xml"
     mode: '0644'
-  
+
 - name: Copy hairpin dialplan
-  template: 
+  template:
     src: hairpin_dialplan.xml.j2
     dest: "{{ freeswitch_path }}conf/dialplan/hairpin.xml"
     mode: '0644'
@@ -197,7 +197,7 @@
     src: mrf_ipv6_sip_profile.xml.j2
     dest: "{{ freeswitch_path }}conf/sip_profiles/mrf_ipv6.xml"
     mode: '0644'
-  when: 
+  when:
     - hostvars[inventory_hostname]['ansible_default_ipv6']
     - hostvars[inventory_hostname]['ansible_default_ipv6']['address']
 
