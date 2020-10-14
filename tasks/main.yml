@@ -139,7 +139,7 @@
   when: freeswitch_make.changed
 
 - name: Copy acl.conf file
-  template: 
+  template:
     src: acl.conf.xml.j2
     dest: "{{ freeswitch_path }}conf/autoload_configs/acl.conf.xml"
     owner: root
