@@ -4,6 +4,7 @@
       <condition field="${sip_h_X-Return-Token}" expression="^(.+)$">
         <action application="export" data="sip_h_X-Return-Token=${sip_h_X-Return-Token}" />
         <action application="export" data="_nolocal_jitterbuffer_msec=100"/>
+        <action application="unset" data="sip_h_User-To-User" />
         <!--
         <action application="set" data="RECORD_STEREO=true"/>
         <action application="set" data="call_id=${strftime(%Y%m%d_%H%M%S)}_${sip_from_tag}"/>

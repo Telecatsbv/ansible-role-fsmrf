@@ -273,7 +273,8 @@
 
 - name: enable freeswitch service
   service:
-    name: freeswitch 
+    name: freeswitch
+    enabled: true
     state: restarted
 
 - name: log files management
